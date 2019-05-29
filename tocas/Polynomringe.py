@@ -418,7 +418,6 @@ class PolynomringElement(RingElement):
         # Jetzt geht's los:
             
         tup = RingTupel((self.grad + other.grad+1)*[self.basisring.null])
-
         for d in range(0,self.grad+other.grad+1):
             for i in range(0,d+1):
                 tup.koeffizienten[d] = tup.koeffizienten[d] + \
