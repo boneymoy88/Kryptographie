@@ -1,13 +1,12 @@
 from AbstrakteRinge import *
 
-
 # Es werden die Klassen Polynomring und PolynomringElement definiert.
 
 
-#------------------------------------------------------------
-# Instanziierbare Klasse Polynomring
 
 class Polynomring(Ring):
+
+    """Instanziierbare Klasse"""
     
     def __init__(self,R : Ring,variablenname = "x"):
 
@@ -16,8 +15,8 @@ class Polynomring(Ring):
              
         self.basisring = R
         
-        self.null = PolynomringElement(0,self)
-        self.eins = PolynomringElement(1,self)
+        self.null = PolynomringElement(self.basisring.null,self)
+        self.eins = PolynomringElement(self.basisring.eins,self)
 
         
         if not type(variablenname) == str:
@@ -60,20 +59,44 @@ class Polynomring(Ring):
         tup = exp*[self.basisring.null] + [self.basisring.eins]
         return PolynomringElement(RingTupel(tup),self)
 
+    def ExtGGT(a: PolynomringElement, b: PolynomringElement):
+        if not (isinstance(a, PolynomringElement) and isinstance(b, PolynomringElement)):
+            raise TypeError('Argumente nicht vom Typ PolynomringElement')
 
-#----------------------------------------------
-# Instanziierbare Klasse PolynomringElement
+        if a.basisring != b.basisring:
+            raise ValueError(
+                'PolynomringElement haben nicht den gleichen Grundring')
+
+        u, v = a.ring.eins, a.ring.null
+        s, t = a.ring.null, a.ring.eins
+        while b != a.ring.null:
+            q = a // b
+            a, b = b, a - q * b
+            u, s = s, u - q * s
+            v, t = t, v - q * t
+            return a.ring.eins, u // a, v // a
+
+    def _polynomring_ext_ggt(self: Polynomring, a: PolynomringElement, b: PolynomringElement):
+        if not (isinstance(a, PolynomringElement) and isinstance(b, PolynomringElement)):
+            raise TypeError('Argumente nicht vom Typ PolynomringElement')
+
+        if a.ring != self or b.ring != self:
+            raise TypeError('PolynomringElement nicht im Polynomring')
+
+        return Polynomring.ExtGGT(a, b)
+    
+    Polynomring.ExtGGT = staticmethod(ExtGGT)
+    Polynomring.ext_ggt = _polynomring_ext_ggt
     
 class PolynomringElement(RingElement):
+
+    """Instanziierbare Klassen"""
     
     def __init__(self,koeffizienten,polyring : Ring):
 
         if not isinstance(polyring,Polynomring):
             raise TypeError("Das zweite Objekt ist kein Polynomring.")
 
-        # Nun erstmal "koeffizienten" kopieren:
-        koeffizienten = deepcopy(koeffizienten)
-        
         # Die folgende Definition folgt der allgemeinen Spezifikation für Ring
         self.ring = polyring
         self.basisring = polyring.basisring
@@ -98,7 +121,6 @@ class PolynomringElement(RingElement):
             else:
                 raise RuntimeError ("Das Ringelement kann nicht in den Polynomring abgebildet werden.")
                 
-
         elif isinstance(koeffizienten,int):
             self.koeffizienten = RingTupel([koeffizienten*self.basisring.eins])
 
@@ -128,16 +150,16 @@ class PolynomringElement(RingElement):
 
         for i in range(0,self.grad+1):
 
-            if not self.koeffizienten.koeffizienten[i] == self.basisring.null:
+            if not self.koeffizienten[i] == self.basisring.null:
 
                 if not ausgabe == "":
                     ausgabe = ausgabe + " + " 
 
 
                 if self.basisring == Z:
-                    ausgabe = ausgabe + str(self.koeffizienten.koeffizienten[i])
+                    ausgabe = ausgabe + str(self.koeffizienten[i])
                 else:
-                    ausgabe = ausgabe + self.koeffizienten.koeffizienten[i].drucke_element_mit_klammen()
+                    ausgabe = ausgabe + self.koeffizienten[i].drucke_element_mit_klammern()
 
                 if i >= 1:
                     ausgabe = ausgabe + "*" + self.ring.variablenname
@@ -155,12 +177,12 @@ class PolynomringElement(RingElement):
         return ausgabe
 
 
-    def drucke_element_mit_klammen(self):
+    def drucke_element_mit_klammern(self):
     
         rueck = self.drucke_element()
     
         i = 0
-        while self.koeffizient(i) == self.basisring.null:
+        while self.koeffizienten[i] == self.basisring.null:
             i += 1
             
         if i < self.grad:
@@ -184,7 +206,7 @@ class PolynomringElement(RingElement):
             raise TypeError("Eingabe ist keine Zahl.")
 
         if i >= 0 and i <= self.grad:
-            return self.koeffizienten.koeffizienten[i]
+            return self.koeffizienten[i]
         else:
             return self.basisring.null
  
@@ -195,48 +217,48 @@ class PolynomringElement(RingElement):
             return PolynomringElement(-self.koeffizienten,self.ring)
 
 
-    def __add__(self,other):
+    def __radd__(self,other):
 
-        super().__add__(other)
-
-        g = max(self.grad,other.grad)
-
-        koeff1 = deepcopy(self.koeffizienten)
-        koeff2 = deepcopy(other.koeffizienten)
-        koeff1 = RingTupel.zusammenfuegen(koeff1, 
-                            RingTupel((g - self.grad)*[self.basisring.null]))
-        koeff2 = RingTupel.zusammenfuegen(koeff2, 
-                            RingTupel((g - other.grad)*[self.basisring.null]))
-
-        return PolynomringElement(koeff1 + koeff2,self.ring)
-        
-
-    def __rmul__(self,other):
+        super().__radd__(other)
 
         if type(other) == int:
-            return RingElement.intmult(other,self)
+            other = other*self.ring.eins
 
-        if not isinstance(other,RingElement):
+        g = max(self.grad,other.grad)
+        
+        koeff1 = RingTupel.zusammenfuegen(self.koeffizienten,
+                            RingTupel((g - self.grad)*[self.basisring.null]))
+        koeff2 = RingTupel.zusammenfuegen(other.koeffizienten,
+                            RingTupel((g - other.grad)*[other.basisring.null]))
+         
+
+        return PolynomringElement(koeff1 + koeff2,self.ring)
+
+        
+    def __rmul__(self,other):
+
+        if not RingElement.test(other):
             raise TypeError("Der erste Faktor ist keine Zahl und kein Ringelement.")
 
-        if other.ring == self.basisring:
+        if not (type(other) == int or RingElement.ring(other) == self.basisring or RingElement.ring(other) == self.ring):
+            raise TypeError("Die Elemente liegen in inkompatiblen Ringen.")
+        
+        if type(other) == int or RingElement.ring(other) == self.basisring:
             return(PolynomringElement(other*self.koeffizienten,self.ring))
-
+        
         if self == self.ring.null or other == self.ring.null:
             return self.ring.null
 
         # Jetzt geht's los:
             
         tup = RingTupel((self.grad + other.grad+1)*[self.basisring.null])
- 
+
         for d in range(0,self.grad+other.grad+1):
             for i in range(0,d+1):
                 tup.koeffizienten[d] = tup.koeffizienten[d] + \
                            self.koeffizient(i) * other.koeffizient(d-i)
-        
+       
         return PolynomringElement(tup,self.ring)
-
-                 
 
 
     def invers(self):
@@ -246,7 +268,7 @@ class PolynomringElement(RingElement):
                 "Der Grad des zu invertierenden Elementes muss null sein.")
 
         # Das zu invertierende Ringelement:
-        element = self.koeffizienten.koeffizienten[0]
+        element = self.koeffizienten[0]
             
         if self.basisring == Z:
             # Über Z kann man nur +1 und -1 invertieren, das Ergebnis ist \
