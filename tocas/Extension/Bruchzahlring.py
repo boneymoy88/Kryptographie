@@ -1,6 +1,5 @@
 from Tocas import Ring, RingElement, Ganzzahlring
 
-
 class Bruchzahlring(Ring):
     """Ring der rationalen Zahlen"""
 

@@ -1,10 +1,12 @@
-from Tocas import Ring, RingElement, Polynomring, PolynomringElement, RingTupel
+import random
+from Tocas import Ring, RingElement, Polynomring, PolynomringElement, RingTupel, GanzzahlRestklassenring
+from Extension import polynomring_extension 
 
 class PolynomRestklassenring(Ring):
     def __init__(self, f: PolynomringElement):
         if not isinstance(f, PolynomringElement):
             raise RuntimeError("Das angegebene Objekt ist kein Polynom.")
-
+        
         if f.grad > 0 and f.koeffizienten.koeffizienten[f.grad] != 1:
             for d in range(f.grad + 1):
                 f.koeffizienten.koeffizienten[d] /= f.koeffizienten.koeffizienten[f.grad]
@@ -29,7 +31,7 @@ class PolynomRestklassenring(Ring):
         return PolynomRestklassenringElement(a, self)
 
     def random(self):
-        if isinstance(self.modulus.basisring, Restklassenring):
+        if isinstance(self.modulus.basisring, GanzzahlRestklassenring):
             r = RingTupel((self.modulus.grad + 1) *
                           [self.modulus.basisring.null])
 
