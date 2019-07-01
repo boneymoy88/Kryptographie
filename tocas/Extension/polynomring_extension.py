@@ -108,9 +108,9 @@ Polynomring.ext_ggt = _polynom_ext_ggt
 
 
 
-def _primzahlen(n, prime_test):
+def _primzahlen(n, primzahl_test):
     divisors = [d for d in range(2, n+1) if n % d == 0]
-    return [d for d in divisors if prime_test(d)]
+    return [d for d in divisors if primzahl_test(d)]
 
 
 def _polynom_irreduzibel(f: PolynomringElement, primzahl_test=None):

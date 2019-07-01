@@ -6,7 +6,7 @@ from Tocas import Ganzzahlring, Polynomring, GanzzahlRestklassenring
 import Extension.polynomring_extension
 
 
-def miller_rabin(n, k=40):
+def miller_rabin(n, k=4000):
     if not isinstance(n, int):
         raise TypeError('Argumente nicht vom Typ int')
 
@@ -15,8 +15,11 @@ def miller_rabin(n, k=40):
 
     if n == 2:
         return True
+    if n == 3:
+        return True
     if n % 2 == 0:
         return False
+
 
     s = 0
     t = n - 1
@@ -27,16 +30,17 @@ def miller_rabin(n, k=40):
     ZnZ = GanzzahlRestklassenring(n)
 
     for _ in range(k):
-        a = ZnZ.element(random.randrange(1, n - 1))
-        a = a ** t
+        a = ZnZ.element(random.randrange(2, n - 1))
+        x = (a ** t)
 
-        if a == ZnZ.eins:
+        if x == ZnZ.eins or x == ZnZ.element(n-1):
             continue
-        for _ in range(s):
-            if a == -ZnZ.eins:
+        for _ in range(s - 1):
+            x = (x**2)
+            if x == ZnZ.eins:
+                return False
+            elif x == ZnZ.element(n-1):
                 break
-            elif a == ZnZ.eins:
-                a = a ** 2
         else:
             return False
 

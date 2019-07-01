@@ -30,7 +30,7 @@ class PolynomRestklassenring(Ring):
     def element(self, a):
         return PolynomRestklassenringElement(a, self)
 
-    def random(self):
+    def zufaellig(self):
         if isinstance(self.modulus.basisring, GanzzahlRestklassenring):
             r = RingTupel((self.modulus.grad + 1) *
                           [self.modulus.basisring.null])
