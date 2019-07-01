@@ -22,6 +22,9 @@ class Bruchzahlring(Ring):
         if not (isinstance(p, int) and isinstance(q, int)):
             raise TypeError("Elemente sind keine ganzen Zahlen.")
         return BruchzahlringElement(p, q, self)
+    
+    def ist_endlicher_koerper(self):
+        return False
 
 class BruchzahlringElement(RingElement):
     """Rationale Zahl"""
