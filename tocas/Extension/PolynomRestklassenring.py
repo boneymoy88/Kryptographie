@@ -131,4 +131,6 @@ class PolynomRestklassenringElement(RingElement):
 
     def invers(self):
         _, u, _ = Polynomring.ExtGGT(self.wert, self.ring.modulus)
+        if u != 1:
+            raise RuntimeError("GGT von Wert und Modulus nicht 1")
         return PolynomRestklassenringElement(u, self.ring)
