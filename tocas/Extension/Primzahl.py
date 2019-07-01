@@ -6,7 +6,7 @@ from Tocas import Ganzzahlring, Polynomring, GanzzahlRestklassenring
 import Extension.polynomring_extension
 
 
-def miller_rabin(n, k=4000):
+def miller_rabin(n, k=40):
     if not isinstance(n, int):
         raise TypeError('Argumente nicht vom Typ int')
 
