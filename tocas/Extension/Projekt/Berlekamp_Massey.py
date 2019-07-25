@@ -39,21 +39,22 @@ def Berlekamp_Massey_algorithm_tocas(sequence):
 
     for n in range(k + 1, N):
         d = 0
-        print("#Koeffizienten:")
+        #print("#Koeffizienten in f:")
+        #print(f)
         for i in range(0, f.koeffizienten.laenge):
-            if(f.koeffizienten[i] == 1):
-                print(i)
+            if(f.koeffizienten[i] != 0):
                 d ^= s[i + n - l]
        
         if d == 0:
             b += 1
         else:
             if 2 * l > n:
-                print("in g ")
-                print(g.koeffizienten)
+                #print("Koeffizienten in g: ")
+                #print(g)
                 help_koeff = [0] * N
                 for i in range(0, g.koeffizienten.laenge):
-                    help_koeff[a - b + i] = 1
+                    if(g.koeffizienten[i] != 0):
+                        help_koeff[a - b + i] = 1
                 t = createKoeffList(f, N)
 
                 koeffizienten = xor_list(help_koeff,t)
@@ -64,15 +65,22 @@ def Berlekamp_Massey_algorithm_tocas(sequence):
                 
                 help_koeff = [0] * N
             
-                print(b-a)
+                #print(b-a)
+                #print("Koeffizienten von f vor ^ g")
+                #print(f)
+                #print(g)
+                
                 for i in range(0, f.koeffizienten.laenge):
-                    help_koeff[b - a + i] = 1
+                    if(f.koeffizienten[i] != 0 ):
+                        help_koeff[b - a + i] = 1
                 t = createKoeffList(f, N)
                 t1 = createKoeffList(g, N)
-                koeffizienten = xor_list(help_koeff, t)
-                koeffizienten = xor_list(koeffizienten, t1)
+                koeffizienten = xor_list(help_koeff, t1)
 
                 f = PolynomringElement(koeffizienten,R_X)
+                #print("Koeffizienten von f nach ^ g")
+                #print(f)
+
                 l = n + 1 - l
                 g = temp
                 a = b
@@ -110,23 +118,31 @@ def Berlekamp_Massey_algorithm(sequence):
     b = 0
     for n in range(k + 1, N):
         d = 0
-        print("#Koeffizienten:")
+        #print("#Koeffizienten in f: ")
+        #print(print_poly(f))
         for ele in f:
-            print(ele)
             d ^= s[ele + n - l]
 
         if d == 0:
             b += 1
         else:
             if 2 * l > n:
-                print("in g ")
-                print([ele for ele in g])
+                #print("in g: ")
+                #print(print_poly(g))
                 f ^= set([a - b + ele for ele in g])
                 b += 1
             else:
+                #print(b-a)
                 temp = f.copy()
-                print([b - a + ele for ele in f])
-                f = set([b - a + ele for ele in f]) ^ g
+                #print([b - a + ele for ele in f])
+                #print("Koeffizienten in f vor ^g") 
+                #print(print_poly(f))
+                #print(print_poly(g))
+                f = set([b - a + ele for ele in f])
+                #print(print_poly(f))
+                f ^= g
+                #print("Koeffizienten in f nach ^g")
+                #print(print_poly(set([ele for ele in f])))
                 l = n + 1 - l
                 g = temp
                 a = b

@@ -44,8 +44,7 @@ def createKoeffList(f):
         list1[i] = f.koeffizienten[i]
     return list1
 
-print(print_poly(set([-1])))
-s = 0,1,1,0,0,0,0,0,1,1,0
+s = 0,1,1,1,0,1,1,0,1,1,0
 print(LFSR.Berlekamp_Massey_algorithm(s)) 
 print(LFSR.Berlekamp_Massey_algorithm_tocas(s))
 
