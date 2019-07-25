@@ -1,12 +1,12 @@
 from AbstrakterAnfang import *
 from copy import deepcopy
 
-
+# -*- coding= utf-8 -*-
 # Es werden abstrakte Klassen "Ring" und 
 # "RingElement" definiert.
 # Die Eingaben werden oftmals nur angegeben, um die Idee
 # klarzumachen.
-# Dies wird dann in Unterklassen überschrieben.
+# Dies wird dann in Unterklassen ueberschrieben.
 
 # Man beachte:
 # Eine Klasse mit einer als "abstactmethod" (@abstractmethod) deklarierten
@@ -33,7 +33,7 @@ class Ring(EinfrierbaresObjekt):
 
     def __eq__(self,other):
 
-        """Das ist ein sehr rudimentärer Gleichheitstest.
+        """Das ist ein sehr rudimentaerer Gleichheitstest.
         Der reicht dann nur bei Ganzzahlring aus."""
 
 
@@ -54,10 +54,10 @@ class Ring(EinfrierbaresObjekt):
 
         """Abstrakte Methode
         
-        Für einen Ring R soll mit R.element(info)
+        Fuer einen Ring R soll mit R.element(info)
         eine durch info definierte Instanz der 
         entsprechenden von RingElement abgeleiteten Klasse
-        zurückgegeben werden.
+        zurueckgegeben werden.
         Siehe z.B. in Restklassenring."""
 
         pass
@@ -83,23 +83,23 @@ class RingElement(EinfrierbaresObjekt):
        
     @abstractmethod
     def drucke_element(self):
-		
+        
         """Abstrakte Methode
         Die Beschreibung soll immer so aussehen:
 
-		  Ringelement  in Ring
-	    
-	    Für die Ausgabe von "Ringelement" ist drucke_element zuständig.
-	    Dies muss noch implementiert werden.
-	    Die Zusammensetzung ist dann immer gleich.
-	    Deshalb ist __str__ nicht abstrakt.
-	    (Und __repr__ ist schon in MeinABCObjekt implementiert.)
-	    Daneben gibt es noch die Methode drucke_element_mit_klammern.
-	    Dies wird von der Ausgabemethode für Polynomringelement
-	    aufgerufen.
-	    Es werden nur dann Klammern um das Element gesetzt,
-	    wenn dies notwendig ist.
-	    In diesem Sinne wird dies erstmal durch drucke_element implementiert."""
+          Ringelement  in Ring
+        
+        Fuer die Ausgabe von "Ringelement" ist drucke_element zustaendig.
+        Dies muss noch implementiert werden.
+        Die Zusammensetzung ist dann immer gleich.
+        Deshalb ist __str__ nicht abstrakt.
+        (Und __repr__ ist schon in MeinABCObjekt implementiert.)
+        Daneben gibt es noch die Methode drucke_element_mit_klammern.
+        Dies wird von der Ausgabemethode fuer Polynomringelement
+        aufgerufen.
+        Es werden nur dann Klammern um das Element gesetzt,
+        wenn dies notwendig ist.
+        In diesem Sinne wird dies erstmal durch drucke_element implementiert."""
 
         pass
 
@@ -107,10 +107,10 @@ class RingElement(EinfrierbaresObjekt):
     def drucke_element_mit_klammern(self):
 
         """Diese Methode sollte eigentlich "drucke_element_mit_klammern_wenn_notwendig"
-        heißen.
+        heissen.
         
-        Sie soll benutzt werden, wenn es für eine Multiplikation self*b
-        notwendig ist, self einzuklammern. Dies ist der Fall für
+        Sie soll benutzt werden, wenn es fuer eine Multiplikation self*b
+        notwendig ist, self einzuklammern. Dies ist der Fall fuer
         Polynome.
         
         Hier wird einfach nur auf drucke_element verwiesen."""
@@ -151,13 +151,13 @@ class RingElement(EinfrierbaresObjekt):
         pass
 
     def __add__(self,other):
-		
+        
         """Addition der Form self + other
 
        Die Reihenfolge wird einfach umgedreht.
        Das Ziel ist: Es sollen sowohl Elemente des gleichen Rings
        als auch Ringelemente mit ganzen Zahlen addiert werden
-       können."""
+       koennen."""
        
         return self.__radd__(other)
 
@@ -178,7 +178,7 @@ class RingElement(EinfrierbaresObjekt):
             raise TypeError("Die Elemente sind nicht aus vergleichbaren Ringen und nicht ganze Zahlen.")
 
         if not (self.ring == other.ring):
-            raise RuntimeError("Die Ringe stimmen nicht überein.")
+            raise RuntimeError("Die Ringe stimmen nicht ueberein.")
 
         return True
 
@@ -189,7 +189,7 @@ class RingElement(EinfrierbaresObjekt):
 
         Die Reihenfolge wird umgedreht und das dann das
         Negative ausgegeben."""
-		
+        
         return -(self.__rsub__(other))
         
 
@@ -204,20 +204,20 @@ class RingElement(EinfrierbaresObjekt):
 
     
     def __mul__(self,other):
-		
+        
         """Multiplikation der Form self*other
 
-        Hier werden nur die Fälle other eine ganze Zahl
+        Hier werden nur die Faelle other eine ganze Zahl
         und other ein RingElement behandelt.
         
-        Hierfür wird rmul aufgerufen.
+        Hierfuer wird rmul aufgerufen.
 
-        Für a*e, e ganze Zahl wird die Reihenfolge umgedreht.
+        Fuer a*e, e ganze Zahl wird die Reihenfolge umgedreht.
         
-        Für a*b, b Ringelement, wird die Reihenfolge beibehalten.
+        Fuer a*b, b Ringelement, wird die Reihenfolge beibehalten.
         
         Dies soll nicht weiter implementiert werden. Das lasst
-        dann offen, was für a*x, x kein Ringelement, passiert."""
+        dann offen, was fuer a*x, x kein Ringelement, passiert."""
 
         
         if not (type(self) == type(other) or type(other) == int):
@@ -247,8 +247,8 @@ class RingElement(EinfrierbaresObjekt):
 
         """Abstrakte Methode
         
-        Könnte in einer Implementierung auch "geht nicht"
-        zurückgeben."""
+        Koennte in einer Implementierung auch "geht nicht"
+        zurueckgeben."""
 
         pass
 
@@ -282,7 +282,7 @@ class RingElement(EinfrierbaresObjekt):
  
     def __pow__(self,exponent):
 
-        """Dies ist für a^b, Eingabe: a ** b"""
+        """Dies ist fuer a^b, Eingabe: a ** b"""
 
     
         if not isinstance(exponent,int):
@@ -294,7 +294,7 @@ class RingElement(EinfrierbaresObjekt):
             
         # Jetzt kommt square-and-multiply
         # Der Exponent wird 2-adisch dargestellt.
-        # Die Funktion dafür ist darunter.
+        # Die Funktion dafuer ist darunter.
         
         a = self
  
@@ -347,7 +347,7 @@ class RingElement(EinfrierbaresObjekt):
     @staticmethod     
 
     def test(testelement):
-		
+        
         """Mit dieser Methode kann getestet werden, ob ein Objekt vom 
         Typ RingElement oder int ist,
         d.h. ob es im mathematischen Sinne ein Ringelement ist."""
@@ -362,7 +362,7 @@ class RingElement(EinfrierbaresObjekt):
 
         """Unter Eingabe eines Ringelements im mathematischen Sinn
         (d.h. ein Objekt vom Typ RingElement oder int) wird der Ring
-        zurückgegeben.
+        zurueckgegeben.
         
         Hiermit kann eine Fallunterscheidung nach RingElement 
         und int vermieden werden."""
@@ -383,7 +383,7 @@ class InvertierungsFehler(ArithmeticError):
 
     """Fehlerklasse
     
-    Für Fehler bei Invertierung."""
+    Fuer Fehler bei Invertierung."""
 
     def __init__(self,element):
 
@@ -395,7 +395,7 @@ class InvertierungsFehler(ArithmeticError):
 
 def zwei_adisch(a):
 
-    """Eine natürliche Zahl wird in zwei-adische Darstellung umgewandelt.
+    """Eine natuerliche Zahl wird in zwei-adische Darstellung umgewandelt.
     Die Reihenfolge der bits ist "so wie man schreibt",
     d.h. die letzte Stelle gibt an, ob gerade oder ungerade"""
 
@@ -480,22 +480,22 @@ class RingTupel(EinfrierbaresObjekt):
 
         # Es gibt mehrere sinnvolle Eingaben:
         
-        # eingabe1 : Liste (list) von Ringelementen, möglicherweise eingabe2 oder ring: Ring
-        # eingabe1 : Tupel (tuple) von Ringelementen, möglicherweise eingabe2 oder ring: Ring
+        # eingabe1 : Liste (list) von Ringelementen, moeglicherweise eingabe2 oder ring: Ring
+        # eingabe1 : Tupel (tuple) von Ringelementen, moeglicherweise eingabe2 oder ring: Ring
         # Hier kann "Ringelement" entweder eine Instanz von RingElement
         # oder von int sein.
 
-        # eingabe1 : RingTupel, möglicherweise eingabe2 : Ring
+        # eingabe1 : RingTupel, moeglicherweise eingabe2 : Ring
 
         # alles drei soll dann ein Tupel von Elementen in dem Ring ergeben
 
-        # standardmäßig ist der Ring durch das erste Ringelement gegeben
+        # standardmaessig ist der Ring durch das erste Ringelement gegeben
         
         # eingabe1 : Ringelement, eingabe2 : nicht-negative ganze Zahl,
-        #    möglicherweise ring : Ring
-        # Dies soll ein Tupel der Länge eingabe2 mit einem Eintrag eingabe1
+        #    moeglicherweise ring : Ring
+        # Dies soll ein Tupel der Laenge eingabe2 mit einem Eintrag eingabe1
         # als Element von Ring sein.
-        # Standardäßig ist der Ring durch das Ringelement gegeben.
+        # Standardaessig ist der Ring durch das Ringelement gegeben.
 
         if isinstance(eingabe2,Ring) and ring == None:
 
@@ -505,7 +505,7 @@ class RingTupel(EinfrierbaresObjekt):
 
         # Jetzt erstmal die Ringelemente kopieren:
 #        eingabe1 = deepcopy(eingabe1)
-#       unnötig
+#       unnoetig
 
         self.ring = ring
             
@@ -523,17 +523,17 @@ class RingTupel(EinfrierbaresObjekt):
 
         # 1. Schritt:
         if eingabe2 == None:
-        # Nur eine Eingabe (bis auf möglicherweise den Ring).
+        # Nur eine Eingabe (bis auf moeglicherweise den Ring).
         # Dann sollte diese eine Liste oder ein Tupel oder vom Typ RingTupel sein.
             
             if type(eingabe1) == list:
             # Die eine Eingabe ist eine Liste.
-            # Dann wird sie einfach übertragen.
+            # Dann wird sie einfach uebertragen.
                 koeffizienten = eingabe1
             
             elif type(eingabe1) == tuple:
             # Die eine Eingabe ist ein Tupel.
-            # Dann wird es in eine Liste verwandelt und übertragen.
+            # Dann wird es in eine Liste verwandelt und uebertragen.
             
                 koeffizienten = []
                 for i in range(0,len(eingabe1)):
@@ -544,14 +544,14 @@ class RingTupel(EinfrierbaresObjekt):
                 koeffizienten = eingabe1.koeffizienten
                     
             else:
-                raise TypeError("Es wurde keine Länge angegeben. Deshalb wurde das erste Objekt als eine Liste oder ein Tupel von Ringelementen (RingElement oder int) oder vom Typ RingTupel erwartet. Dies war nicht der Fall.")
+                raise TypeError("Es wurde keine Laenge angegeben. Deshalb wurde das erste Objekt als eine Liste oder ein Tupel von Ringelementen (RingElement oder int) oder vom Typ RingTupel erwartet. Dies war nicht der Fall.")
 
 
         elif type(eingabe2) == int:
-        # Jetzt wird eine Liste der Länge eingabe2 vom Element eingabe1 erzeugt
+        # Jetzt wird eine Liste der Laenge eingabe2 vom Element eingabe1 erzeugt
 
             if eingabe2 < 0:
-                RuntimeError("Die angegebene Länge ist negativ.")
+                RuntimeError("Die angegebene Laenge ist negativ.")
 
             koeffizienten = []
             for i in range(0,eingabe2):
@@ -567,7 +567,7 @@ class RingTupel(EinfrierbaresObjekt):
         self.laenge = len(koeffizienten)
         self.koeffizienten = [] # Hier kommen dann die Koeffizienten rein.
         
-        # Wenn die Länge gleich Null ist, ist Schluss.
+        # Wenn die Laenge gleich Null ist, ist Schluss.
         if self.laenge == 0:
             if self.ring == None:
                 self.ring = Z
@@ -575,14 +575,14 @@ class RingTupel(EinfrierbaresObjekt):
         else:
         # Jetzt ist koeffizienten ein nicht-leeres Tupel.
             
-        # Die Einträge sollten entweder vom Typ int
+        # Die Eintraege sollten entweder vom Typ int
         # oder von einem Typ abgeleitet von RingElement sein.
             for i in range(0,self.laenge):
                 if not RingElement.test(koeffizienten[i]):
                     raise TypeError("Nicht alle Koeffizienten sind Ringelemente.")
 
 
-            # Wenn nun self.ring noch nicht vorhanden ist, wird es über
+            # Wenn nun self.ring noch nicht vorhanden ist, wird es ueber
             # den ersten Koeffizienten definiert.
 
             if self.ring == None:
@@ -592,7 +592,7 @@ class RingTupel(EinfrierbaresObjekt):
                 else: # D.h. koeffizienten[0] ist eine ganze Zahl
                     self.ring = Z
             
-            # Jetzt können die Koeffizienten in diesen Ring abgebildet werden.
+            # Jetzt koennen die Koeffizienten in diesen Ring abgebildet werden.
             for i in range(0,self.laenge):
                 self.koeffizienten.append(self.ring.element(koeffizienten[i]))
 
@@ -630,10 +630,10 @@ class RingTupel(EinfrierbaresObjekt):
     def __getitem__(self,index):
 
         if not type(index) == int:
-            raise RuntimeError("Die Eingabe für den Index ist keine ganze Zahl.")
+            raise RuntimeError("Die Eingabe fuer den Index ist keine ganze Zahl.")
         
         if index < 0 or index >= self.laenge:
-            raise RuntimeError("Der Index ist außerhalb des Bereichs.")
+            raise RuntimeError("Der Index ist ausserhalb des Bereichs.")
     
         return self.koeffizienten[index]
 
@@ -642,10 +642,10 @@ class RingTupel(EinfrierbaresObjekt):
     def __setitem__(self,index,wert):
 
         if not type(index) == int:
-            raise RuntimeError("Die Eingabe für den Index ist keine ganze Zahl.")
+            raise RuntimeError("Die Eingabe fuer den Index ist keine ganze Zahl.")
         
         if index < 0 or index >= self.laenge:
-            raise RuntimeError("Der Index ist außerhalb des Bereichs.")
+            raise RuntimeError("Der Index ist ausserhalb des Bereichs.")
 
         if not RingElement.test(wert):
             raise RuntimeError("Das Objekt auf der rechten Seite ist kein Ringelement.")
@@ -676,7 +676,7 @@ class RingTupel(EinfrierbaresObjekt):
             raise TypeError("Der zweite Summand ist kein RingTupel.")
         
         if not self.laenge == other.laenge:
-            raise RuntimeError("Die Längen sind nicht gleich.")
+            raise RuntimeError("Die Laengen sind nicht gleich.")
 
         try:
             rueck = RingTupel(other,self.ring)
@@ -705,8 +705,8 @@ class RingTupel(EinfrierbaresObjekt):
         #Wie immer wird hier other*self betrachtet.
                 
         # Wir wollen von links mit ganzen Zahlen
-        # und mit Ringelementen multiplizieren können.
-        # Wenn das Tupel ganze Zahlen enthält, wollen wir ein
+        # und mit Ringelementen multiplizieren koennen.
+        # Wenn das Tupel ganze Zahlen enthaelt, wollen wir ein
         # Tupel von Ringelementen (entsprechend other) erhalten.
         
         if self.ring == Z:

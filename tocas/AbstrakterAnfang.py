@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 
 
 def typ_beschreibung(objekt):
-	
-    """Diese Funktion gibt zu einer Instanz einer Klasse den Namen der Klasse als String zurück.
-    Anders ausgedrückt: Es gibt den Namen (!) des Typs zurück
+    
+    """Diese Funktion gibt zu einer Instanz einer Klasse den Namen der Klasse als String zurueck.
+    Anders ausgedrueckt: Es gibt den Namen (!) des Typs zurueck
     Denn: type(objekt) ist identisch zu objekt.__class__ """
 
     return objekt.__class__.__name__
@@ -16,7 +16,7 @@ class MeinABCObjekt(ABC):
 
     """Abstrakte Klasse
     
-    Der Grund für diese rudimentäre abstrakte Klasse ist dieser:
+    Der Grund fuer diese rudimentaere abstrakte Klasse ist dieser:
     
     __str__ wird mit print(.) ausgeben.
     __repr__ wird ausgegeben, wenn man einfach
@@ -45,13 +45,13 @@ class MeinABCObjekt(ABC):
 class EinfrierbaresObjekt(MeinABCObjekt):
 
     """Abstrakte Klasse
-	
-	Die folgende Idee zum "Einfrieren" von Klassen habe ich hier "geklaut"
-	https://stackoverflow.com/questions/3603502/prevent-creating-new-attributes-outside-init
-	
-	Zum Einfrieren benutzt man dann das Kommando self._frier().
-	Auftauen kann man dann mit self._tau()"""
-	
+    
+    Die folgende Idee zum "Einfrieren" von Klassen habe ich hier "geklaut"
+    https://stackoverflow.com/questions/3603502/prevent-creating-new-attributes-outside-init
+    
+    Zum Einfrieren benutzt man dann das Kommando self._frier().
+    Auftauen kann man dann mit self._tau()"""
+    
 
 
     @abstractmethod

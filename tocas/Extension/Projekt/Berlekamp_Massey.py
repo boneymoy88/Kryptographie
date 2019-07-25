@@ -3,6 +3,23 @@ from Extension import endlicher_koerper
 
                         
 R_X = Polynomring(Z)
+
+def xor_list(list1, list2):
+    temp = list1
+    for i in range(0, len(list1)):
+        if ((list1[i] == 1 or list2[i] == 1) and list1[i] != list2[i]):
+            temp[i] = 1
+        else : temp[i] = 0
+    return temp
+
+def createKoeffList(f,N):
+    list1 = [0] * N 
+    for i in range(0, f.koeffizienten.laenge):
+        list1[i] = f.koeffizienten[i]
+    return list1
+
+
+
 def Berlekamp_Massey_algorithm_tocas(sequence):
     N = len(sequence)
     s = sequence[:]
@@ -33,15 +50,29 @@ def Berlekamp_Massey_algorithm_tocas(sequence):
         else:
             if 2 * l > n:
                 print("in g ")
-                print([i for i in range(0, g.koeffizienten.laenge)])
-                koeff = [a - b + i for i in range(0, g.koeffizienten.laenge)]
-                f += PolynomringElement(koeff, R_X)
+                print(g.koeffizienten)
+                help_koeff = [0] * N
+                for i in range(0, g.koeffizienten.laenge):
+                    help_koeff[a - b + i] = 1
+                t = createKoeffList(f, N)
+
+                koeffizienten = xor_list(help_koeff,t)
+                f = PolynomringElement(koeffizienten, R_X)
                 b += 1
             else:
                 temp = f
-                print([i for i in range(0, f.koeffizienten.laenge)])
-                koeff = [b - a + i for i in range(0, f.koeffizienten.laenge)]
-                f = PolynomringElement(koeff,R_X) + g
+                
+                help_koeff = [0] * N
+            
+                print(b-a)
+                for i in range(0, f.koeffizienten.laenge):
+                    help_koeff[b - a + i] = 1
+                t = createKoeffList(f, N)
+                t1 = createKoeffList(g, N)
+                koeffizienten = xor_list(help_koeff, t)
+                koeffizienten = xor_list(koeffizienten, t1)
+
+                f = PolynomringElement(koeffizienten,R_X)
                 l = n + 1 - l
                 g = temp
                 a = b
@@ -59,7 +90,7 @@ def Berlekamp_Massey_algorithm(sequence):
             break
     f = set([k + 1, 0])  # use a set to denote polynomial
     l = k + 1
-
+    g = set([0]) 
             # output the polynomial
     def print_poly(polynomial):
         result = ''
@@ -74,8 +105,7 @@ def Berlekamp_Massey_algorithm(sequence):
                 result += ' + '
 
         return result
-    
-    g = set([0])
+
     a = k
     b = 0
     for n in range(k + 1, N):
@@ -95,7 +125,7 @@ def Berlekamp_Massey_algorithm(sequence):
                 b += 1
             else:
                 temp = f.copy()
-                print([ele for ele in f])
+                print([b - a + ele for ele in f])
                 f = set([b - a + ele for ele in f]) ^ g
                 l = n + 1 - l
                 g = temp
