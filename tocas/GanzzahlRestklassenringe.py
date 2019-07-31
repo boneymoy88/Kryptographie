@@ -129,7 +129,7 @@ class GanzzahlRestklassenringElement(RingElement):
         # oder ein Ganzzahl-Restklassenringelement, dessen modulus
         # ein Vielfaches von dem von a ist:
         # Dieser Faktor wird (zunächst) als Zahl dargestellt. 
-
+ 
         if type(other) == int:
             b = other
         elif (isinstance(other,GanzzahlRestklassenringElement) and 
