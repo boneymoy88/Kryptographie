@@ -1,4 +1,0 @@
-#nonsingular square case
-
-def 
-

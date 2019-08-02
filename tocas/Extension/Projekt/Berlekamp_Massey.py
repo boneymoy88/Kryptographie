@@ -86,113 +86,7 @@ def Berlekamp_Massey_algorithm_binary(sequence):
 
     return (f, l)
 
-def Berlekamp_Massey_algorithm_old(sequence):
-
-    N = len(sequence)
-    s = sequence[:]
-
-    for k in range(N):
-        if s[k] == 1:
-            break
-    f = set([k + 1, 0])  # use a set to denote polynomial
-    l = k + 1
-    g = set([0]) 
-            # output the polynomial
-    def print_poly(polynomial):
-        result = ''
-        lis = sorted(polynomial, reverse=True)
-        for i in lis:
-            if i == 0:
-                result += '1'
-            else:
-                result += 'x^%s' % str(i)
-
-            if i != lis[-1]:
-                result += ' + '
-
-        return result
-
-    a = k
-    b = 0
-    for n in range(k + 1, N):
-        d = 0
-        #print("#Koeffizienten in f: ")
-        #print(print_poly(f))
-        for ele in f:
-            d ^= s[ele + n - l]
-
-        if d == 0:
-            b += 1
-        else:
-            if 2 * l > n:
-                #print("in g: ")
-                #print(print_poly(g))
-                f ^= set([a - b + ele for ele in g])
-                b += 1
-            else:
-                #print(b-a)
-                temp = f.copy()
-                #print([b - a + ele for ele in f])
-                #print("Koeffizienten in f vor ^g") 
-                #print(print_poly(f))
-                #print(print_poly(g))
-                f = set([b - a + ele for ele in f])
-                #print(print_poly(f))
-                f ^= g
-                #print("Koeffizienten in f nach ^g")
-                #print(print_poly(set([ele for ele in f])))
-                l = n + 1 - l
-                g = temp
-                a = b
-                b = n - l + 1
-
-    return (print_poly(f), l)
-
-def berlekamp_massey(s,K):
-
-    
-    if (not K.ist_endlicher_koerper()):
-        print("Kein endlicher Koerper!")
-        return 0
-    else:
-        print("Ist endlichr Koerper!")
-
-    print(K)
-    C = PolynomRestklassenringElement([1],K)
-    B = PolynomRestklassenringElement([1],K)
-    n = 0
-    L = 0
-    m = 1
-    b = 1 #field K?
-    N = len(s)
-    
-    for n in range(0, N-1):
-        helpSum = 0
-        for k in range(0,L):
-            print("helpSum")
-            print(k)
-            helpSum += C.wert.koeffizienten[k]*s[n-k]
-        d = s[n] + helpSum
-        print(d)
-        if (d == 1):
-            m = m + 1
-        elif (2 * L <= n):
-            T = C
-            print(C)
-            C = C - d * b**(-1) * K.erzeuger**m * B
-            print(C)
-            L = n + 1 - L
-            B = T
-            b = d
-            m = 1
-        else:
-            if(b != 0):
-                C = C - d * b**(-1) * K.erzeuger**m * B
-            else:
-                C = C
-            m = m + 1
-    return (C, L)
-
+# Berechnet Diskrepanz der erechneten Sequenz und gegbenen Sequenz
 def disc(poly,seq,n,polyRing,field):
     total = field.null
     #print(n)
@@ -206,6 +100,7 @@ def disc(poly,seq,n,polyRing,field):
     #print(total)
     return total
 
+# Hilfsfunktion um Multiiplikation von Polynom und Skalar durchzufuehren
 def skalarPolyMultiplikation(F,d,Ring):
     helpkoeff = [0]*F.koeffizienten.laenge
     #print(F.koeffizienten.laenge)
@@ -217,19 +112,32 @@ def skalarPolyMultiplikation(F,d,Ring):
             break
     return PolynomringElement(helpkoeff,Ring)
 
-def createKoeffList2(f,N):
+# Gibt Liste von Koeffizienten eines gegebenen Polynoms zurueck
+def createKoeffList2(C,N):
     list1 = [0] * (N+1)
     #print(N)
     #print(f.koeffizienten[0])
-    for i in range(0, f.koeffizienten.laenge):
+    for i in range(0, C.koeffizienten.laenge):
         #print(f.koeffizienten[i])
-        if(f.koeffizienten[i] != 0):
+        if(C.koeffizienten[i] != 0):
             #print(f.koeffizienten[i])
-            list1[i] = f.koeffizienten[i]
+            list1[i] = C.koeffizienten[i]
     return list1
 
+# Potenziert Koeffizienten des Polynoms C um x
+def potenzieren(C, N, x, field):
+    koeffizienten = createKoeffList2(C,N)
+    zeros = [field.null for i in range(x)]
+    zeros[len(zeros):] = koeffizienten
+    return zeros
+
+
+# Berlekamp Massey Algorithmus findet kleinstes Polynom welches gegebene Sequenz
+# aus endlichem Koerper berechnet
+# seq: Sequenz von Elementen aus
+# field: endlicher Koerper 
 def scalarMassey(seq,field):
-    #print(type(field.eins))
+    # test if field is endlicher_koerper
     polyRing = Polynomring(field)
     C = PolynomringElement([field.eins],polyRing)
     B = PolynomringElement([field.eins],polyRing)
@@ -237,83 +145,30 @@ def scalarMassey(seq,field):
     L = 0
     b = field.eins
     N = 0
+    # Durchlaufe alle Elemente der gegebenen Sequenz
     for N in range(len(seq)):
+        # Berechnet Diskrepanz der erechneten Sequenz und gegbenen Sequenz
         d = disc(C,seq,N,polyRing,field)
-        #print(N)
+        # Falls die Diskrepanz null betraegt wurde Sequenz korrekt berechnet durch das Polynom C beschrieben
+        # somit kann mit dem naechsten Elemetn fortgefuehrt werden
         if (d == field.null):
             x = x+1
+        # Falls nicht, muss das Polynom C angepasst werden  
         else:
             if 2*L > N:
                 mB = skalarPolyMultiplikation(B,(d/b),polyRing)# B * (d/b)
-                print("test")
-                #print(mB)
-                #print(C)
-                hilfkoeff = createKoeffList2(mB,N)   
-                print(hilfkoeff)
-                zeros=[field.null for i in range(x)]
-                zeros[len(zeros):] = hilfkoeff
-                hilfkoeff = zeros
-                #hilfkoeff = hilfkoeff[:N+1]
-                print(hilfkoeff)
+                hilfkoeff = potenzieren(mB, N, x, field)
                 C = C - PolynomringElement(hilfkoeff, polyRing)
-                #polyRing.sub(C,polyRing.timesXPower(mB,x))
-                #print(C)
                 x = x + 1
             else:
-                print("mod")
                 mB = skalarPolyMultiplikation(B,(d/b),polyRing)
-                #print(mB)
                 B = C
-                hilfkoeff = createKoeffList2(mB,N)   
-                print(hilfkoeff)
-                print(x)
-                zeros = [field.null for i in range(x)]
-                print(zeros)
+                hilfkoeff = potenzieren(mB, N, x, field)
                 # Potenzieren in dem 0 an anfang der Liste eingesetzt wird
-                zeros[len(zeros):] = hilfkoeff
-                hilfkoeff = zeros
-                #hilfkoeff = hilfkoeff[:N+1]
-                print(hilfkoeff)
-                C = C - PolynomringElement(hilfkoeff, polyRing) #polyRing.sub(C,polyRing.timesXPower(mB,x))
-                #print(C)
+                C = C - PolynomringElement(hilfkoeff, polyRing) 
                 L = N + 1 - L
                 b = d
                 x = 1
     #C = PolynomringElement( ,polyRing)
     return C
 
-    
-#input binary sequence s
-#output polynom
-#def berlekamp_massey(s):
-#    N = len(s)
-#    # erste auftretende 1 in k merken
-#    for k in range(N):
-#        if s[k] == 1:
-#            break
-#    
-#    C = PolynomringElement([1], R_X)
-#    T = PolynomringElement([1], R_X)
-#    L = 0
-#    m = -1
-#    B = PolynomringElement([1], R_X)
-#    N = 0
-#    #calculate discrepancy
-#    while(n < N):
-#        d = s[n] + sumOfSequence(s, L, m, N)
-#        if (d == 1):
-#            T = C
-#            C = C + B * R_X.variable**(N-m)
-#            if (L <= (N/2)):
-#                L = N + 1 - L
-#                m = N
-#                B = T
-#        else:
-#            N += 1
-#    return C
-
-#def sumOfSequence(s, L, m, N):
-#    discrepancy = 0
-#    for i in range(0, m - 1):
-#        discrepancy += C.koeffizienten[i] * s[N - 1 - i]
-#    return discrepancy
