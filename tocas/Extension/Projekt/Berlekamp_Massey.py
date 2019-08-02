@@ -169,6 +169,13 @@ def scalarMassey(seq,field):
                 L = N + 1 - L
                 b = d
                 x = 1
-    #C = PolynomringElement( ,polyRing)
+    C = reverseKoeffizienten(C)
     return C
 
+def reverseKoeffizienten(C):
+    anzahlKoeffizienten = C.koeffizienten.laenge
+    reverseList = [0]*anzahlKoeffizienten
+    for i in range(anzahlKoeffizienten):
+        reverseList[anzahlKoeffizienten - 1 - i] = C.koeffizienten[i]
+    return PolynomringElement(reverseList, C.ring)
+        
