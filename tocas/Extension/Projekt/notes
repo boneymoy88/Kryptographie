@@ -1,0 +1,27 @@
+Reed Solomon Idee: sende 2, 1, 7 kodiere als poynom p(x) = 2x**2 + 1x + 7
+       	     	   versende (p(1),...,p(7)) sende (10,17,28,43,62,85,112)
+		   --> Empfaenger muss polynom wiedergewinnen und nachricht lesen
+		   --> dann eigentlich ermitteln von Fehlern beim senden
+		   --> waehlen von endlichem koerper um extrapolierte werte klein zu halten 
+
+Ziel: 		   Geheimtext entschlüsseln (Reed Solomon Code) eigentlich Fehlerkorrektur
+Wir besitzen: 	   Geheimtext, Koerper K der Symbole
+Wir berechnen: 	   ein Polynom, welches die gegebene Sequenz erzeugen kann
+    	       	   Polynom ist also Seed des gegebenen Geheimtextes
+Verschluesselung:  Text S = s1 + s2 + ... + sn
+		   Polynom C = 1 + c1x + c2x**2 + ... + cLx**L
+		   Geheimtext kann mit polynom berechnet werden 
+Algorithmus: 	   --> sn + C1sn-1 + ... + CLsn-L = 0 errechnen
+	     	   Diskrepanz: d = sum(ci * sn-i)
+	     	   -> schritt k: d = sk + c1sk-1 + c2sk-2 + ... + cLsk-L
+	     	   falls d = 0: erhoehe x
+		   falls nicht: C = C - (d/b) * P.variable**x * B
+	     	   b: wert Diskrepanz der letzten laengenaenderung des LFSR
+	     	   Diskrepanz waere nun: dneu = sk + c1sk-1 + ... - (d/b)(sj + b1sj-1 + ...)
+	     		      	    	 dneu =        d  	       - (d/b)*b
+					      = d-d = 0
+	     		   
+
+
+Laufzeitberechnung
+

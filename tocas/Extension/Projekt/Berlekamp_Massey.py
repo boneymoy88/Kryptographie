@@ -74,10 +74,10 @@ def scalarMassey(seq,K):
     if (not Primzahl.miller_rabin(P.basisring.modulus)):
         raise RuntimeError("Polynomring nicht ueber Primzahl")
 
-    C = PolynomringElement([K.eins],P)
+    C = PolynomringElement([K.eins],P)  # Aktuelles Rueckkopplungspolynom
     B = PolynomringElement([K.eins],P)  # Rueckkopplungspolynom, bei letzten laengenaenderung des LFSR
-    x = 1                               # Anzahl Iterationen seit letzter laengenaenderung des LSFR
-    L = 0                               # aktuelle Laenge des LFSR
+    m = 1                               # Anzahl Iterationen seit letzter laengenaenderung des LSFR
+    L = 0                               # Aktuelle Laenge des LFSR
     b = K.eins                          # wert Diskrepanz der letzten laengenaenderung des LFSR
     N = 0                               # Aktuell betrachtete Elemente aus Sequenz
 
@@ -86,28 +86,25 @@ def scalarMassey(seq,K):
 
         d = diskrepanz(C,seq,N,K) # Berechnet Diskrepanz der erechneten Sequenz und gegbenen Sequenz
         if (d == K.null):         # Falls die Diskrepanz null betraegt wurde Sequenz korrekt durch das Polynom C beschrieben
-            x = x + 1             # somit kann mit dem naechsten Element fortgefuehrt werden
+            m = m + 1             # somit kann mit dem naechsten Element fortgefuehrt werden
         else:                     # Falls nicht, muss das Polynom C angepasst werden  
-            if 2*L > N:           # Groesse des aktuellen linearen Feedback Register reicht aus
+            if 2*L > N:           # Groesse des aktuellen LFSR reicht aus
                                   # falls L mehr als halb so gross wie aktuell betrachtete seq-laenge
-                mB = B * (d/b).wert                       # (d/b) * B = mB
-                hilfKoeff = mB * P.variable**x         
-                C = C - PolynomringElement(hilfKoeff, P)  # C = C - (d/b) * B * P.variable**x
-                x = x + 1                                 # keine laengenaenderung --> x erhoehen
+                C = C - (d/b).wert * B * P.variable**m        # C = C - (d/b) * B * x**m
+                m = m + 1                                 # keine laengenaenderung --> x erhoehen
 
-            else:                 # Lineares Feedback Register zu klein und muss erhoeht werden
-
+            else:                 # LFSR zu klein und muss vergroessert werden
                 mB = B * (d/b).wert 
                 B = C
-                hilfKoeff = mB * P.variable**x
-                C = C - PolynomringElement(hilfKoeff, P) 
+                mB = mB * P.variable**m
+                C = C - mB
                 L = N + 1 - L                            # Anpassung der laenge des LFSR
                 b = d                                    # Bei Anpassung alte Diskrepanz in b
-                x = 1                                    # zuruecksetzen der Iterationenen seit L vergroessert wurde
+                m = 1                                    # zuruecksetzen der Iterationenen seit L vergroessert wurde
                 
     C = reverseKoeffizienten(C)
-    return C, L
-    #return time.time() - tStart, P.basisring.modulus
+    #return C, L
+    return time.time() - tStart, P.basisring.modulus
 
 
 
