@@ -1,0 +1,19 @@
+Ziel: Geheimtext entschlüsseln (Reed Solomon Code) eigentlich fehlerkorrektur
+Wir besitzen: Geheimtext, Koerper K der Symbole
+Wir berechnen: ein Polynom, welches die gegebene Sequenz erzeugen kann
+    	       Polynom ist also Seed des gegebenen Geheimtextes
+Verschluesselung: Text S = s1 + s2 + ... + sn
+		  Polynom C = 1 + c1x + c2x**2 + ... + cLx**L
+		  Geheimtext kann mit polynom berechnet werden 
+Algorithmus: --> sn + C1sn-1 + ... + CLsn-L = 0 errechnen
+	     Diskrepanz: d = sum(ci * sn-i)
+	     -> schritt k: d = sk + c1sk-1 + c2sk-2 + ... + cLsk-L
+	     falls d = 0: erhoehe x
+	     falls nicht: C = C - (d/b) * P.variable**x * B
+	     b: wert Diskrepanz der letzten laengenaenderung des LFSR
+	     Diskrepanz waere nun: d = sk + c1sk-1 + ... - (d/b)(sj + b1sj-1 + ...)
+	     		      	   ---> d - (d/b)*b = d-d = 0
+	     		   
+
+
+Wir erstellen Geheimtext mit bestimmten seed 
