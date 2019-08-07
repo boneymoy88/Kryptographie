@@ -90,7 +90,7 @@ def scalarMassey(seq,K):
                 m = m + 1                                 # L bleibt gleich --> m erhoehen
 
             else:                 # LFSR zu klein und muss vergroessert werden
-                T = (d/b).wert * P.variable**m * B   # Ergenis in T zwischenspeichern
+                T = (d/b).wert * P.variable**m * B       # Ergenis in T zwischenspeichern
                 B = C
                 C = C - T
                 L = N + 1 - L                            # Anpassung der laenge des LFSR
@@ -98,8 +98,8 @@ def scalarMassey(seq,K):
                 m = 1                                    # zuruecksetzen der Iterationenen seit L vergroessert wurde
                 
     C = reverseKoeffizienten(C)
-    #return C, L
-    return time.time() - tStart, L
+    return C, L
+    #return time.time() - tStart, P.basisring.modulus
 
 
 
