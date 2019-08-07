@@ -4,7 +4,7 @@ Reed Solomon Idee: sende 2, 1, 7 kodiere als poynom p(x) = 2x**2 + 1x + 7
 		   --> dann eigentlich ermitteln von Fehlern beim senden
 		   --> waehlen von endlichem koerper um extrapolierte werte klein zu halten 
 
-Ziel: 		   Geheimtext entschlüsseln (Reed Solomon Code) eigentlich Fehlerkorrektur
+Ziel: 		   Geheimtext entschluesseln (Reed Solomon Code) eigentlich Fehlerkorrektur
 Wir besitzen: 	   Geheimtext, Koerper K der Symbole
 Wir berechnen: 	   ein Polynom, welches die gegebene Sequenz erzeugen kann
     	       	   Polynom ist also Seed des gegebenen Geheimtextes
@@ -21,7 +21,5 @@ Algorithmus: 	   --> sn + C1sn-1 + ... + CLsn-L = 0 errechnen
 	     		      	    	 dneu =        d  	       - (d/b)*b
 					      = d-d = 0
 	     		   
-
-
 Laufzeitberechnung
 

@@ -15,7 +15,7 @@ def diskrepanz(polynom,seq,N,K):
         polynom (PolynomringElement): Polynom das vorgegeben Sequenz errechnen soll
         seq                   (list): Die zu berechnende Sequenz
         N                      (int): Bisher betrachtete laenge der Sequenz
-        K              (Endlicher K): Elemente aus Sequenz sind aus diesem endlichen Koerper
+        K  (GanzzahlRestklassenring): Elemente aus Sequenz sind aus diesem endlichen Koerper
     Returns:
         integer: Diskrepanz zwischen tatsaechlicher Sequenz und durch Polynom errechnete Sequenz
     
@@ -46,7 +46,7 @@ def reverseKoeffizienten(C):
 
 
 def scalarMassey(seq,K):
-    """Berlekamp Massey Algorithmus findet kleinstes Polynom welches gegebene Sequenz aus endlichem Koerper berechnet
+    """Berlekamp Massey Algorithmus findet kleinstes Polynom welches gegebene Sequenz aus endlichem Koerper berechnet, sowie die lineare Komplexitaet der Sequenz.
     
     Args: 
         seq                  (list): Die zu berechnende Sequenz
@@ -65,10 +65,6 @@ def scalarMassey(seq,K):
     if (not K.ist_endlicher_koerper()): # Testen ob K endlicher_koerper 
         raise RuntimeError("Berlekamp Massey nur auf endlichen Koerpern.")
     
-    # Initialisierungen von
-    # Polynomring: polyring
-    # Polynomring Elemente: C,B
-    
     P = Polynomring(K)
 
     if (not Primzahl.miller_rabin(P.basisring.modulus)):
@@ -84,27 +80,26 @@ def scalarMassey(seq,K):
     
     for N in range(len(seq)):     # Durchlaufe alle Elemente der gegebenen Sequenz
 
-        d = diskrepanz(C,seq,N,K) # Berechnet Diskrepanz der erechneten Sequenz und gegbenen Sequenz
+        d = diskrepanz(C,seq,N,K) # Berechnet Diskrepanz der erechneten Sequenz zur gegbenen Sequenz
         if (d == K.null):         # Falls die Diskrepanz null betraegt wurde Sequenz korrekt durch das Polynom C beschrieben
             m = m + 1             # somit kann mit dem naechsten Element fortgefuehrt werden
         else:                     # Falls nicht, muss das Polynom C angepasst werden  
-            if 2*L > N:           # Groesse des aktuellen LFSR reicht aus
-                                  # falls L mehr als halb so gross wie aktuell betrachtete seq-laenge
-                C = C - (d/b).wert * B * P.variable**m        # C = C - (d/b) * B * x**m
-                m = m + 1                                 # keine laengenaenderung --> x erhoehen
+            if 2*L > N:           # Groesse des aktuellen LFSR L reicht aus
+                                  # falls L gleich oder mehr als halb so gross wie aktuell betrachtete seq-laenge
+                C = C - (d/b).wert * P.variable**m * B    # C = C - (d/b) * x**m * B
+                m = m + 1                                 # L bleibt gleich --> m erhoehen
 
             else:                 # LFSR zu klein und muss vergroessert werden
-                mB = B * (d/b).wert 
+                T = (d/b).wert * P.variable**m * B   # Ergenis in T zwischenspeichern
                 B = C
-                mB = mB * P.variable**m
-                C = C - mB
+                C = C - T
                 L = N + 1 - L                            # Anpassung der laenge des LFSR
                 b = d                                    # Bei Anpassung alte Diskrepanz in b
                 m = 1                                    # zuruecksetzen der Iterationenen seit L vergroessert wurde
                 
     C = reverseKoeffizienten(C)
     #return C, L
-    return time.time() - tStart, P.basisring.modulus
+    return time.time() - tStart, L
 
 
 
