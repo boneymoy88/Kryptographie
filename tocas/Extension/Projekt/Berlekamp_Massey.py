@@ -45,7 +45,7 @@ def reverseKoeffizienten(C):
     return PolynomringElement(reverseList, C.ring)
 
 
-def scalarMassey(seq,K):
+def berleMassey(seq,K):
     """Berlekamp Massey Algorithmus findet kleinstes Polynom welches gegebene Sequenz aus endlichem Koerper berechnet, sowie die lineare Komplexitaet der Sequenz.
     
     Args: 
@@ -60,15 +60,15 @@ def scalarMassey(seq,K):
                       Wenn K nicht uerber Primzahl
     """
     
-    tStart = time.time() #: Laufzeitberechnung intialisieren
+    tStart = time.time()                #: Laufzeitberechnung intialisieren
     
     if (not K.ist_endlicher_koerper()): # Testen ob K endlicher_koerper 
         raise RuntimeError("Berlekamp Massey nur auf endlichen Koerpern.")
     
     P = Polynomring(K)
 
-    if (not Primzahl.miller_rabin(P.basisring.modulus)):
-        raise RuntimeError("Polynomring nicht ueber Primzahl")
+    if (type(K) == GanzzahlRestklassenring):
+        raise RuntimeError("Nur über GanzzahlRestklassenringe implementiert.")
 
     C = PolynomringElement([K.eins],P)  # Aktuelles Rueckkopplungspolynom
     B = PolynomringElement([K.eins],P)  # Rueckkopplungspolynom, bei letzten laengenaenderung des LFSR
@@ -84,12 +84,13 @@ def scalarMassey(seq,K):
         if (d == K.null):         # Falls die Diskrepanz null betraegt wurde Sequenz korrekt durch das Polynom C beschrieben
             m = m + 1             # somit kann mit dem naechsten Element fortgefuehrt werden
         else:                     # Falls nicht, muss das Polynom C angepasst werden  
-            if 2*L > N:           # Groesse des aktuellen LFSR L reicht aus
-                                  # falls L gleich oder mehr als halb so gross wie aktuell betrachtete seq-laenge
+            if 2*L > N:               # Groesse des aktuellen LFSR L reicht aus
+                                      # falls L gleich oder mehr als halb so gross wie aktuell betrachtete seq-laenge
                 C = C - (d/b).wert * P.variable**m * B    # C = C - (d/b) * x**m * B
                 m = m + 1                                 # L bleibt gleich --> m erhoehen
 
-            else:                 # LFSR zu klein und muss vergroessert werden
+            else:                     # LFSR zu klein und muss vergroessert werden
+               
                 T = (d/b).wert * P.variable**m * B       # Ergenis in T zwischenspeichern
                 B = C
                 C = C - T
